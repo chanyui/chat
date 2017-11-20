@@ -25,7 +25,6 @@ brew install swoole
 ====
 
 <code>
-    
     <?php
     $server = new swoole_websocket_server("127.0.0.1", 9502);
 
@@ -43,7 +42,6 @@ brew install swoole
     });
 
     $server->start();
-
 </code>
 
 
