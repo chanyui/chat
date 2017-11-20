@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="yc">
+    <meta name="description" content="a im web app built by kyrieliu">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>PHP swoole扩展 实现socket聊天室</title>
+
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./main.css">
+
+</head>
+<body>
+
+<div class="container">
+    <!-- 标题header -->
+    <div class="row">
+        <div class="col-xs-12 col-md-9 col-md-offset-2 banner">
+            <h1 class="text-center">PHP swoole扩展 实现socket聊天室</h1>
+        </div>
+    </div>
+
+    <!--发送的历史消息 -->
+    <div class="row">
+        <div class="col-sm-12 col-md-offset-2">
+            <div class="row">
+                <div class="col-xs-8 col-sm-2 online">
+                    <div class="text-center">当前在线</div>
+                    <div id="onlineArea"></div>
+                </div>
+                <div class="col-xs-4 col-sm-7 historyMsg" id="historyMsg">
+                    <span id="system"></span>
+                    <!-- <p class="newMsg">
+                        <span class="nickname">kyrieliu</span>
+                        <span class="timespan">(21:00:15):</span>
+                        去去去去去去去去去去去去去
+                    </p>
+                    <p class="myMsg">
+                        <span class="timespan">(22:12:11):</span>
+                        了了了了了了了了了了了了
+                    </p>
+                    <p class="system"><span class="nickname">kyrieliu</span>加入了群聊</p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 控制台 -->
+    <div class="row">
+        <div class="col-xs-12 col-md-9 col-md-offset-2 control">
+            <div class="row control-row">
+                <div class="col-sm-10">
+                    <textarea rows="4" id="inputMsg" class="form-control" placeholder="说点什么吧,并点击按钮发送..."></textarea>
+                </div>
+                <button id="sendBtn" class="sendBtn btn btn-primary">send</button>
+            </div>
+        </div>
+    </div>
+
+    <!--遮罩层-->
+    <!--<div id="loginWrapper" class="loginWrapper">
+       <p id="info" class="info"></p>
+       <div id="nickWrapper" class="nickWrapper col-md-4 col-md-offset-4 col-sm-12">
+           <input type="text" placeholder="input your nickname" id="nicknameInput" class="form-control" />
+           <input type="button" class="btn btn-success" id="loginBtn" value="Login" />
+       </div>
+   </div>-->
+
+</div>
+
+<footer>
+    <small>Designed by <a href="https://www.swoole.com/" target="_blank">Swoole</a></small>
+</footer>
+
+</body>
+
+<!-- Modal 模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog custom-dialog succ-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <label for="name" class="control-label">YourName:</label>
+                <input type="text" class="form-control" id="name" placeholder="在这里输入您的临时用户昵称！">
+            </div>
+            <div class="modal-footer">
+                <span class="text-left" id="error"></span>
+                <button type="button" id="confirm" class="btn btn-primary btn-right">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    //var username = 'user_' + parseInt(1000000 * Math.random());
+    window.onload = function () {
+        var ws = new WebSocket("ws://192.168.13.203:9502");
+        ws.onopen = function (event) {
+            $("#myModal").modal('show');
+            $('#confirm').click(function () {
+                var userName = $('#name').val();
+                if (userName == '') {
+                    $('#error').fadeIn(1000).html('请输入临时用户昵称！').fadeOut(3000);
+                    return;
+                } else {
+                    $("#myModal").modal('hide');
+                    ws.send('init-' + userName + '-' + '上线了!');
+                }
+            });
+        };
+
+        ws.onmessage = function (event) {
+            var res = JSON.parse(event.data);
+
+            msgCallBack(res);
+
+            //console.log(msg_div);
+            //console.log(event.data);
+        };
+
+        ws.onclose = function (event) {
+            console.log("WebSocketClosed!");
+        };
+
+        ws.onerror = function (event) {
+            console.log("WebSocketError!");
+        };
+
+        function msgCallBack(resObj) {
+            var msg_div = $('#historyMsg');
+
+            switch (resObj.code) {
+                case 'init':
+                    var html = '<p class="text-center" style="color: red;">' + resObj.user + ' ' + resObj.msg + '</p>';
+                    $('#system').fadeIn(1000).html(html).fadeOut(3000);
+                    break;
+                case 'user_list':
+                    var userObj = resObj.userArr;
+                    var userHtml = '';
+                    for (var index in userObj) {
+                        userHtml += '<p class="text-center">' + userObj[index][1] + '</p>';
+                    }
+                    $('#onlineArea').html(userHtml);
+                    break;
+                case 'all':
+                    var html = '';
+                    //console.log(resObj);
+                    if (resObj.currentUserFd == resObj.pushUserFd) {
+                        html = '<div class="text-right clearfix"> <div class="text-right" style="display: block;margin: 5px 5px 0px 0px;">Me:(' + resObj.time + ')</div> <div class="my_msg">' + resObj.msg + '</div></div>';
+                    } else {
+                        html = '<div class="text-left clearfix"> <div class="text-left" style="display: block;margin: 5px 0px 0px 5px;">' + resObj.user + ':(' + resObj.time + ')</div>  <div class="user_msg">' + resObj.msg + '</div></div>';
+                    }
+                    msg_div.append(html);
+                    //控制滚动条自动滚到底部
+                    msg_div.scrollTop(msg_div[0].scrollHeight);
+                    break;
+            }
+        }
+
+        /*$('#inputMsg').keydown(function(event){
+            if(event.which==13){
+                sendMsg();
+                event.returnValue = false;
+                event.preventDefault();
+            }
+        });*/
+
+        $('#sendBtn').click(function () {
+            var msg = $('#inputMsg');
+            if (msg.val() == '') {
+                alert('请输入信息！');
+                return;
+            }
+            ws.send('all-' + msg.val());
+            msg.val('');
+        });
+    }
+</script>
+</html>
