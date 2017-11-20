@@ -22,6 +22,10 @@ brew install swoole
 
 需要修改config.php 的websocket里的ip地址
 
+#运行
+====
+在命令行中：php run.php 或 ./run.php 运行php代码
+
 #后台主要代码
 ====
 <code>  
