@@ -23,7 +23,7 @@ brew install swoole
 
 #后台主要代码
 ====
-···
+`
 <?php
 $server = new swoole_websocket_server("127.0.0.1", 9502);
 
@@ -41,23 +41,7 @@ $server->on('close', function($server, $fd) {
 });
 
 $server->start();
-···
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+`
 
 
 
