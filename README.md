@@ -19,12 +19,14 @@ brew install swoole
 #注
 ====
 需要修改index.html 的websocket里的ip地址
+
 需要修改config.php 的websocket里的ip地址
 
 #后台主要代码
 ====
 
-```
+<code>
+    
     <?php
     $server = new swoole_websocket_server("127.0.0.1", 9502);
 
@@ -42,7 +44,7 @@ brew install swoole
     });
 
     $server->start();
-```
+</code>
 
 
 
