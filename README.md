@@ -1,8 +1,9 @@
 # swoole_chat
+=====
 swoole 聊天室，一对多聊天
 
 #运行
-
+====
 需要安装swoole扩展，1.8以上
 
 Linux 用户
@@ -16,11 +17,12 @@ Mac 用户
 brew install swoole
 
 #注
-
+====
 需要修改index.html 的websocket里的ip地址
 需要修改config.php 的websocket里的ip地址
 
-
+#后台
+====
 <?php
 $server = new swoole_websocket_server("127.0.0.1", 9502);
 
