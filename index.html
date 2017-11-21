@@ -10,7 +10,7 @@
 
     <!-- 新 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./css/main.css">
 
 </head>
 <body>
@@ -138,14 +138,18 @@
 
             switch (resObj.code) {
                 case 'init':
-                    var html = '<p class="text-center" style="color: red;">' + resObj.user + ' ' + resObj.msg + '</p>';
+                    var html = '<p class="text-center" style="color: green;">' + resObj.user + ' ' + resObj.msg + '</p>';
                     $('#system').fadeIn(1000).html(html).fadeOut(3000);
                     break;
                 case 'user_list':
                     var userObj = resObj.userArr;
                     var userHtml = '';
                     for (var index in userObj) {
-                        userHtml += '<p class="text-center">' + userObj[index][1] + '</p>';
+                        if (resObj.pushFd == userObj[index][0]) {
+                            userHtml += '<p class="text-center" style="color: green;">' + userObj[index][1] + '</p>';
+                        } else {
+                            userHtml += '<p class="text-center">' + userObj[index][1] + '</p>';
+                        }
                     }
                     $('#onlineArea').html(userHtml);
                     break;

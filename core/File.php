@@ -44,9 +44,9 @@ class File
      * +-----------------------------------------------------------
      * @return array
      */
-    public static function createFile($filename, $_mode)
+    protected static function createFile($filename, $_mode)
     {
-        $hd = fopen(__DIR__ . '/' . $filename, $_mode);
+        $hd = fopen(dirname(__DIR__).'/log/' . $filename, $_mode);
         $_txt = fgets($hd);
         return [
             $hd,
@@ -67,8 +67,8 @@ class File
      */
     public static function readFile($filename)
     {
-        if (file_exists(__DIR__ . '/' . $filename)) {
-            $res = file_get_contents(__DIR__ . '/' . $filename);
+        if (file_exists(dirname(__DIR__).'/log/' . $filename)) {
+            $res = file_get_contents(dirname(__DIR__).'/log/' . $filename);
         } else {
             $res = '';
         }

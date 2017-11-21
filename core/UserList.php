@@ -142,7 +142,8 @@ class UserList
         foreach ($userList as $key => $val) {
             $this->server->push($val[0], json_encode([
                     'code' => 'user_list',
-                    'userArr' => $userList
+                    'userArr' => $userList,
+                    'pushFd' => $val[0]
                 ])
             );
         }

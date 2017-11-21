@@ -7,8 +7,8 @@
  * Desc: 面向对象代码
  */
 
-require_once './File.php';
-require_once './UserList.php';
+require_once ROOT_PATH . '/core/File.php';
+require_once ROOT_PATH . '/core/UserList.php';
 
 class Websocket
 {
@@ -64,14 +64,14 @@ class Websocket
      * @author yc
      * +-----------------------------------------------------------
      */
-    private function onOpen($server, $req)
+    function onOpen($server, $req)
     {
         //把客户端传过来的id保存到文件中
         //$this->connect_info($req->fd, 'insert');
         $oldFds = File::readFile('jsonFds.txt');
         if (!empty($oldFds)) {
             $oldFdArr = json_decode($oldFds, true);
-            $fdArr = array_merge($oldFdArr, array($req->fd));
+            $fdArr = array_merge($oldFdArr, [$req->fd]);
         } else {
             $fdArr = [$req->fd];
         }
@@ -123,7 +123,7 @@ class Websocket
     }
 
     /**
-     * 有新用户进入系统初始化操作
+     * 有新用户进入系统初始化操作(推送用户在线和上线信息)
      * +-----------------------------------------------------------
      * @functionName : _init
      * +-----------------------------------------------------------
