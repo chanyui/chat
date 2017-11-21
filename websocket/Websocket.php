@@ -64,7 +64,7 @@ class Websocket
      * @author yc
      * +-----------------------------------------------------------
      */
-    function onOpen($server, $req)
+    public function onOpen($server, $req)
     {
         //把客户端传过来的id保存到文件中
         //$this->connect_info($req->fd, 'insert');
