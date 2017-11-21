@@ -231,10 +231,10 @@ class Websocket
      */
     private function connect_info($fd = 0, $opt = 'insert')
     {
-        $json_info = file_get_contents(__DIR__ . '/jsonFd.txt');
+        $json_info = file_get_contents(ROOT_PATH . '/log/jsonFd.txt');
         $fd_arr = json_decode($json_info, true);
         if ($opt == 'clear') {
-            file_put_contents(__DIR__ . '/jsonFd.txt', json_encode([]));
+            file_put_contents(ROOT_PATH . '/log/jsonFd.txt', json_encode([]));
         } elseif ($opt == 'read') {
             if (!$fd_arr) {
                 return;
@@ -250,14 +250,14 @@ class Websocket
                         return true;
                     }
                 });
-                file_put_contents(__DIR__ . '/jsonFd.txt', json_encode($fd_arr));
+                file_put_contents(ROOT_PATH . '/log/jsonFd.txt', json_encode($fd_arr));
             }
         } else {
             if (!$fd_arr) {
                 $fd_arr = [];
             }
             $arr = array_merge($fd_arr, array($fd));
-            file_put_contents(__DIR__ . '/jsonFd.txt', json_encode($arr));
+            file_put_contents(ROOT_PATH . '/log/jsonFd.txt', json_encode($arr));
         }
     }
 
