@@ -7,6 +7,9 @@
  * Time: 上午11:03
  */
 
+#$mypid= getmypid();
+#file_put_contents('/tmp/pid.txt' , $mypid , FILE_APPEND);
+#file_put_contents('/tmp/pid.txt' , $mypid , FILE_APPEND);
 date_default_timezone_set('Asia/Shanghai');
 define('ROOT_PATH', realpath(dirname(__FILE__)));
 

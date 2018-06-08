@@ -21,8 +21,15 @@ class Websocket
         $this->host = $host;
         $this->port = $port;
 
-        //创建websocket服务器对象，监听192.168.13.203:9502端口
+        //创建websocket服务器对象，监听地址:9502端口
         $this->server = new swoole_websocket_server($this->host, $this->port);
+
+        $this->server->set(array(
+            'worker_num' => 4,      //worker process num 设置启动的Worker进程数
+            'backlog' => 128,       //listen backlog
+            'max_request' => 50,    //设置worker进程的最大任务数
+            'dispatch_mode' => 1,   //1-轮循模式，收到会轮循分配给每一个worker进程
+        ));
 
         //$this->connect_info(0, 'clear');
         File::write('jsonFds.txt', json_encode([]), 'w+');
@@ -44,8 +51,8 @@ class Websocket
         $this->server->on('close', function (swoole_websocket_server $server, $fd) {
             //关闭连接 连接减少
             /*global $max;
-            $max--;
-            echo "client {$fd} closed\n";*/
+              $max--;
+              echo "client {$fd} closed\n";*/
 
             $this->onClose($server, $fd);
         });
@@ -145,7 +152,7 @@ class Websocket
             'user' => $data_arr[1],
             'msg' => $data_arr[2]
         ];
-        echo PHP_EOL . date('Y-m-d H:i:s', time()) . ': ' . $dataArr['currentUserFd'] . ' : ' . $dataArr['user'] . ' ' . $dataArr['msg'];
+        /*echo PHP_EOL . date('Y-m-d H:i:s', time()) . ': ' . $dataArr['currentUserFd'] . ' : ' . $dataArr['user'] . ' ' . $dataArr['msg'];*/
 
         //向在线的所有人广播上线信息
         foreach ($this->server->connections as $fd) {
@@ -260,6 +267,5 @@ class Websocket
             file_put_contents(ROOT_PATH . '/log/jsonFd.txt', json_encode($arr));
         }
     }
-
 
 }

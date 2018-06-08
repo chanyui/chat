@@ -101,7 +101,7 @@
 <script type="text/javascript">
     //var username = 'user_' + parseInt(1000000 * Math.random());
     window.onload = function () {
-        var ws = new WebSocket("ws://192.168.13.203:9502");
+        var ws = new WebSocket("ws://192.168.33.10:9501");
         ws.onopen = function (event) {
             $("#myModal").modal('show');
             $('#confirm').click(function () {

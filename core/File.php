@@ -44,7 +44,7 @@ class File
      * +-----------------------------------------------------------
      * @return array
      */
-    protected static function createFile($filename, $_mode)
+    protected static function createFile($filename, $_mode = "a+")
     {
         $hd = fopen(dirname(__DIR__).'/log/' . $filename, $_mode);
         $_txt = fgets($hd);

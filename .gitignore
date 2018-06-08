@@ -1,3 +1,5 @@
 /.idea/
 /user_list.txt
 /jsonFds.txt
+*.DS_Store
+/nohup.out
