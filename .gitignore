@@ -3,3 +3,4 @@
 /jsonFds.txt
 *.DS_Store
 /nohup.out
+/log

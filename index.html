@@ -107,7 +107,7 @@
             $('#confirm').click(function () {
                 var userName = $('#name').val();
                 if (userName == '') {
-                    $('#error').fadeIn(1000).html('请输入临时用户昵称！').fadeOut(3000);
+                    $('#error').fadeIn(1000).html('<span style="color: red">请输入临时用户昵称！</span>').fadeOut(3000);
                     return;
                 } else {
                     $("#myModal").modal('hide');
@@ -157,7 +157,7 @@
                     var html = '';
                     //console.log(resObj);
                     if (resObj.currentUserFd == resObj.pushUserFd) {
-                        html = '<div class="text-right clearfix"> <div class="text-right" style="display: block;margin: 5px 5px 0px 0px;">Me:(' + resObj.time + ')</div> <div class="my_msg">' + resObj.msg + '</div></div>';
+                        html = '<div class="text-right clearfix"> <div class="text-right" style="display: block;margin: 5px 5px 0px 0px;">' + resObj.user + ':(' + resObj.time + ')</div> <div class="my_msg">' + resObj.msg + '</div></div>';
                     } else {
                         html = '<div class="text-left clearfix"> <div class="text-left" style="display: block;margin: 5px 0px 0px 5px;">' + resObj.user + ':(' + resObj.time + ')</div>  <div class="user_msg">' + resObj.msg + '</div></div>';
                     }
