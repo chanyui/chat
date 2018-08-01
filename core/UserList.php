@@ -29,6 +29,18 @@ class UserList
      */
     protected function addUser($oldUserArr)
     {
+        //当前在线的client fd
+        $connectFds = [];
+        foreach ($this->server->connections as $fd) {
+            $connectFds[] = $fd;
+        }
+        if ($oldUserArr) {
+            foreach ($oldUserArr as $key => $value) {
+                if (!in_array($value[0], $connectFds)) {
+                    unset($oldUserArr[$key]);
+                }
+            }
+        }
         $key = $this->fd . '_user';
         $user_arr = [
             $key => [

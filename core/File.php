@@ -29,7 +29,7 @@ class File
         }
 
         fwrite($hd_txt[0], $hd_txt[1] . $msg);
-        self::close($hd_txt [0]);
+        self::close($hd_txt[0]);
     }
 
     /**
@@ -46,7 +46,7 @@ class File
      */
     protected static function createFile($filename, $_mode = "a+")
     {
-        $hd = fopen(dirname(__DIR__).'/log/' . $filename, $_mode);
+        $hd = fopen(dirname(__DIR__) . '/log/' . $filename, $_mode);
         $_txt = fgets($hd);
         return [
             $hd,
@@ -67,8 +67,8 @@ class File
      */
     public static function readFile($filename)
     {
-        if (file_exists(dirname(__DIR__).'/log/' . $filename)) {
-            $res = file_get_contents(dirname(__DIR__).'/log/' . $filename);
+        if (file_exists(dirname(__DIR__) . '/log/' . $filename)) {
+            $res = file_get_contents(dirname(__DIR__) . '/log/' . $filename);
         } else {
             $res = '';
         }

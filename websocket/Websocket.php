@@ -78,6 +78,15 @@ class Websocket
         $oldFds = File::readFile('jsonFds.txt');
         if (!empty($oldFds)) {
             $oldFdArr = json_decode($oldFds, true);
+            $connectFds = [];
+            foreach ($server->connections as $fd) {
+                $connectFds[] = $fd;
+            }
+            foreach ($oldFdArr as $key => $value) {
+                if (!in_array($value, $connectFds)) {
+                    unset($oldFdArr[$key]);
+                }
+            }
             $fdArr = array_merge($oldFdArr, [$req->fd]);
         } else {
             $fdArr = [$req->fd];
@@ -155,7 +164,7 @@ class Websocket
         /*echo PHP_EOL . date('Y-m-d H:i:s', time()) . ': ' . $dataArr['currentUserFd'] . ' : ' . $dataArr['user'] . ' ' . $dataArr['msg'];*/
 
         //向在线的所有人广播上线信息
-        foreach ($this->server->connections as $fd) {
+        foreach ($server->connections as $fd) {
             $this->server->push($fd, json_encode($dataArr));
         }
     }
@@ -186,7 +195,7 @@ class Websocket
         ];
 
         //向在线的所有人广播发送消息
-        foreach ($this->server->connections as $fd) {
+        foreach ($server->connections as $fd) {
             $this->server->push($fd, json_encode(array_merge($dataArr, ['pushUserFd' => $fd])));
         }
 
